@@ -1,0 +1,538 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function validCharacterNumberMap(mapValue, maxValue) {
+      return mapValue is map &&
+        mapValue.keys().hasOnly(["puppy", "cat", "rabbit", "bear", "panda", "chick"]) &&
+        mapValue.puppy is int &&
+        mapValue.puppy >= 0 &&
+        mapValue.puppy <= maxValue &&
+        mapValue.cat is int &&
+        mapValue.cat >= 0 &&
+        mapValue.cat <= maxValue &&
+        mapValue.rabbit is int &&
+        mapValue.rabbit >= 0 &&
+        mapValue.rabbit <= maxValue &&
+        mapValue.bear is int &&
+        mapValue.bear >= 0 &&
+        mapValue.bear <= maxValue &&
+        mapValue.panda is int &&
+        mapValue.panda >= 0 &&
+        mapValue.panda <= maxValue &&
+        mapValue.chick is int &&
+        mapValue.chick >= 0 &&
+        mapValue.chick <= maxValue;
+    }
+
+    function validCharacterList(listValue) {
+      return listValue is list &&
+        listValue.size() >= 1 &&
+        listValue.size() <= 6 &&
+        listValue.toSet().size() == listValue.size() &&
+        listValue.toSet().hasOnly(["puppy", "cat", "rabbit", "bear", "panda", "chick"]) &&
+        listValue.toSet().hasAny(["puppy"]);
+    }
+
+    function validProviderList(listValue) {
+      return listValue is list &&
+        listValue.size() >= 1 &&
+        listValue.size() <= 4 &&
+        listValue.toSet().size() == listValue.size() &&
+        listValue.toSet().hasOnly(["anonymous", "google.com", "apple.com", "oidc.kakao"]);
+    }
+
+    function validCosmeticsList(listValue) {
+      return listValue is list &&
+        listValue.size() <= 20 &&
+        listValue.toSet().size() == listValue.size() &&
+        listValue.toSet().hasOnly(["spring-coat", "gold-board"]);
+    }
+
+    function validDailyClaimedList(listValue) {
+      return listValue is list &&
+        listValue.size() <= 7 &&
+        listValue.toSet().size() == listValue.size() &&
+        listValue.toSet().hasOnly([1, 2, 3, 4, 5, 6, 7]);
+    }
+
+    function validStageStars(stars) {
+      return stars is map &&
+        stars.size() <= 12 &&
+        stars.keys().hasOnly(["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]) &&
+        (!("1" in stars) || (stars["1"] is int && stars["1"] >= 0 && stars["1"] <= 3)) &&
+        (!("2" in stars) || (stars["2"] is int && stars["2"] >= 0 && stars["2"] <= 3)) &&
+        (!("3" in stars) || (stars["3"] is int && stars["3"] >= 0 && stars["3"] <= 3)) &&
+        (!("4" in stars) || (stars["4"] is int && stars["4"] >= 0 && stars["4"] <= 3)) &&
+        (!("5" in stars) || (stars["5"] is int && stars["5"] >= 0 && stars["5"] <= 3)) &&
+        (!("6" in stars) || (stars["6"] is int && stars["6"] >= 0 && stars["6"] <= 3)) &&
+        (!("7" in stars) || (stars["7"] is int && stars["7"] >= 0 && stars["7"] <= 3)) &&
+        (!("8" in stars) || (stars["8"] is int && stars["8"] >= 0 && stars["8"] <= 3)) &&
+        (!("9" in stars) || (stars["9"] is int && stars["9"] >= 0 && stars["9"] <= 3)) &&
+        (!("10" in stars) || (stars["10"] is int && stars["10"] >= 0 && stars["10"] <= 3)) &&
+        (!("11" in stars) || (stars["11"] is int && stars["11"] >= 0 && stars["11"] <= 3)) &&
+        (!("12" in stars) || (stars["12"] is int && stars["12"] >= 0 && stars["12"] <= 3));
+    }
+
+    function validUserProfile() {
+      return request.resource.data.keys().hasOnly([
+          "nickname",
+          "hearts",
+          "coins",
+          "bestScore",
+          "totalScore",
+          "lastHeartAt",
+          "inventory",
+          "level",
+          "xp",
+          "stars",
+          "streak",
+          "lastDailyKey",
+          "completedDailyKeys",
+          "rp",
+          "tier",
+          "mainCharacter",
+          "unlockedCharacters",
+          "characterLevels",
+          "characterAffinity",
+          "characterPlays",
+          "cosmetics",
+          "totalPlays",
+          "totalMatches",
+          "maxCombo",
+          "totalSpecials",
+          "authProvider",
+          "linkedProviders",
+          "seasonPassPremium",
+          "vipUntil",
+          "createdAt",
+          "lastLoginAt",
+          "updatedAt"
+        ]) &&
+        request.resource.data.nickname is string &&
+        request.resource.data.nickname.size() >= 1 &&
+        request.resource.data.nickname.size() <= 12 &&
+        request.resource.data.hearts is int &&
+        request.resource.data.hearts >= 0 &&
+        request.resource.data.hearts <= 5 &&
+        request.resource.data.coins is int &&
+        request.resource.data.coins >= 0 &&
+        request.resource.data.coins <= 9999999 &&
+        request.resource.data.bestScore is int &&
+        request.resource.data.bestScore >= 0 &&
+        request.resource.data.bestScore <= 9999999 &&
+        request.resource.data.get("totalScore", 0) is int &&
+        request.resource.data.get("totalScore", 0) >= 0 &&
+        request.resource.data.get("totalScore", 0) <= 999999999 &&
+        request.resource.data.lastHeartAt is int &&
+        request.resource.data.lastHeartAt >= 0 &&
+        request.resource.data.inventory is map &&
+        request.resource.data.inventory.keys().hasOnly(["hint", "hammer", "shuffle", "timePlus"]) &&
+        request.resource.data.inventory.hint is int &&
+        request.resource.data.inventory.hint >= 0 &&
+        request.resource.data.inventory.hint <= 999 &&
+        request.resource.data.inventory.hammer is int &&
+        request.resource.data.inventory.hammer >= 0 &&
+        request.resource.data.inventory.hammer <= 999 &&
+        request.resource.data.inventory.shuffle is int &&
+        request.resource.data.inventory.shuffle >= 0 &&
+        request.resource.data.inventory.shuffle <= 999 &&
+        request.resource.data.inventory.timePlus is int &&
+        request.resource.data.inventory.timePlus >= 0 &&
+        request.resource.data.inventory.timePlus <= 999 &&
+        request.resource.data.level is int &&
+        request.resource.data.level >= 1 &&
+        request.resource.data.level <= 999 &&
+        request.resource.data.xp is int &&
+        request.resource.data.xp >= 0 &&
+        request.resource.data.xp <= 99999999 &&
+        request.resource.data.stars is int &&
+        request.resource.data.stars >= 0 &&
+        request.resource.data.stars <= 99999999 &&
+        request.resource.data.streak is int &&
+        request.resource.data.streak >= 0 &&
+        request.resource.data.streak <= 9999 &&
+        request.resource.data.lastDailyKey is string &&
+        request.resource.data.lastDailyKey.size() <= 10 &&
+        request.resource.data.completedDailyKeys is list &&
+        request.resource.data.completedDailyKeys.size() <= 31 &&
+        request.resource.data.rp is int &&
+        request.resource.data.rp >= 0 &&
+        request.resource.data.rp <= 999999 &&
+        request.resource.data.tier in ["BRONZE", "SILVER", "GOLD", "PLATINUM", "DIAMOND"] &&
+        request.resource.data.mainCharacter in ["puppy", "cat", "rabbit", "bear", "panda", "chick"] &&
+        validCharacterList(request.resource.data.unlockedCharacters) &&
+        validCharacterNumberMap(request.resource.data.characterLevels, 99) &&
+        validCharacterNumberMap(request.resource.data.characterAffinity, 999999) &&
+        validCharacterNumberMap(request.resource.data.characterPlays, 999999) &&
+        validCosmeticsList(request.resource.data.get("cosmetics", [])) &&
+        request.resource.data.totalPlays is int &&
+        request.resource.data.totalPlays >= 0 &&
+        request.resource.data.totalPlays <= 99999999 &&
+        request.resource.data.totalMatches is int &&
+        request.resource.data.totalMatches >= 0 &&
+        request.resource.data.totalMatches <= 99999999 &&
+        request.resource.data.maxCombo is int &&
+        request.resource.data.maxCombo >= 0 &&
+        request.resource.data.maxCombo <= 999 &&
+        request.resource.data.totalSpecials is int &&
+        request.resource.data.totalSpecials >= 0 &&
+        request.resource.data.totalSpecials <= 99999999 &&
+        request.resource.data.get("authProvider", "anonymous") in [
+          "anonymous",
+          "google.com",
+          "apple.com",
+          "oidc.kakao"
+        ] &&
+        validProviderList(request.resource.data.get("linkedProviders", ["anonymous"])) &&
+        request.resource.data.get("seasonPassPremium", false) is bool &&
+        request.resource.data.get("vipUntil", 0) is int &&
+        request.resource.data.get("vipUntil", 0) >= 0 &&
+        request.resource.data.get("vipUntil", 0) <= 4102444800000;
+    }
+
+    function validUserProfileClientUpdate() {
+      return validUserProfile() &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+          "nickname",
+          "lastLoginAt",
+          "updatedAt"
+        ]) &&
+        request.resource.data.lastLoginAt == request.time &&
+        request.resource.data.updatedAt == request.time;
+    }
+
+    function validLeaderboardScore() {
+      return request.auth != null &&
+        request.resource.data.keys().hasOnly([
+          "playerUid",
+          "nickname",
+          "score",
+          "maxCombo",
+          "feverCount",
+          "mode",
+          "version",
+          "playedAtDay",
+          "playedAtWeek"
+        ]) &&
+        request.resource.data.playerUid == request.auth.uid &&
+        request.resource.data.nickname is string &&
+        request.resource.data.nickname.size() >= 1 &&
+        request.resource.data.nickname.size() <= 12 &&
+        request.resource.data.score is int &&
+        request.resource.data.score >= 0 &&
+        request.resource.data.score <= 9999999 &&
+        request.resource.data.maxCombo is int &&
+        request.resource.data.maxCombo >= 0 &&
+        request.resource.data.maxCombo <= 999 &&
+        request.resource.data.feverCount is int &&
+        request.resource.data.feverCount >= 0 &&
+        request.resource.data.feverCount <= 999 &&
+        request.resource.data.mode == "60s" &&
+        request.resource.data.version is string &&
+        request.resource.data.version.size() <= 20 &&
+        request.resource.data.playedAtDay is string &&
+        request.resource.data.playedAtDay.size() == 10 &&
+        request.resource.data.playedAtWeek is string &&
+        request.resource.data.playedAtWeek.size() >= 7 &&
+        request.resource.data.playedAtWeek.size() <= 8;
+    }
+
+    function validMatchBase() {
+      return request.resource.data.keys().hasOnly([
+          "userId",
+          "mode",
+          "seed",
+          "status",
+          "startedAtMs",
+          "durationMs",
+          "score",
+          "maxCombo",
+          "matchedCells",
+          "specialTriggers",
+          "feverCount",
+          "rewards",
+          "replay",
+          "moveCount",
+          "accepted",
+          "version",
+          "startedAt",
+          "finishedAt"
+        ]) &&
+        request.resource.data.userId is string &&
+        request.resource.data.userId == request.auth.uid &&
+        request.resource.data.mode in ["rush", "stage", "versus"] &&
+        request.resource.data.seed is string &&
+        request.resource.data.seed.size() >= 8 &&
+        request.resource.data.seed.size() <= 120 &&
+        request.resource.data.status in ["started", "finished"] &&
+        request.resource.data.startedAtMs is int &&
+        request.resource.data.startedAtMs >= 0 &&
+        request.resource.data.version is string &&
+        request.resource.data.version.size() <= 20;
+    }
+
+    function validStartedMatch() {
+      return validMatchBase() &&
+        request.resource.data.status == "started" &&
+        request.resource.data.keys().hasOnly([
+          "userId",
+          "mode",
+          "seed",
+          "status",
+          "startedAtMs",
+          "version",
+          "startedAt"
+        ]) &&
+        request.resource.data.startedAt == request.time;
+    }
+
+    function validFinishedMatch() {
+      return validMatchBase() &&
+        request.resource.data.status == "finished" &&
+        request.resource.data.keys().hasAll([
+          "durationMs",
+          "score",
+          "maxCombo",
+          "matchedCells",
+          "specialTriggers",
+          "feverCount",
+          "rewards",
+          "replay",
+          "moveCount",
+          "accepted",
+          "finishedAt"
+        ]) &&
+        request.resource.data.durationMs is int &&
+        request.resource.data.durationMs >= 0 &&
+        request.resource.data.durationMs <= 180000 &&
+        request.resource.data.score is int &&
+        request.resource.data.score >= 0 &&
+        request.resource.data.score <= 9999999 &&
+        request.resource.data.maxCombo is int &&
+        request.resource.data.maxCombo >= 0 &&
+        request.resource.data.maxCombo <= 999 &&
+        request.resource.data.matchedCells is int &&
+        request.resource.data.matchedCells >= 0 &&
+        request.resource.data.matchedCells <= 99999 &&
+        request.resource.data.specialTriggers is int &&
+        request.resource.data.specialTriggers >= 0 &&
+        request.resource.data.specialTriggers <= 99999 &&
+        request.resource.data.feverCount is int &&
+        request.resource.data.feverCount >= 0 &&
+        request.resource.data.feverCount <= 999 &&
+        request.resource.data.rewards is map &&
+        request.resource.data.rewards.keys().hasOnly(["xp", "stars"]) &&
+        request.resource.data.rewards.xp is int &&
+        request.resource.data.rewards.xp >= 0 &&
+        request.resource.data.rewards.xp <= 99999999 &&
+        request.resource.data.rewards.stars is int &&
+        request.resource.data.rewards.stars >= 0 &&
+        request.resource.data.rewards.stars <= 99999999 &&
+        request.resource.data.replay is list &&
+        request.resource.data.replay.size() <= 240 &&
+        request.resource.data.moveCount is int &&
+        request.resource.data.moveCount >= 0 &&
+        request.resource.data.moveCount <= 240 &&
+        request.resource.data.moveCount == request.resource.data.replay.size() &&
+        request.resource.data.accepted is bool &&
+        request.resource.data.finishedAt == request.time;
+    }
+
+    function validDailyCheckin(userId) {
+      return request.resource.data.keys().hasOnly([
+          "claimed",
+          "lastClaimedKey",
+          "cycleDay",
+          "updatedAt"
+        ]) &&
+        userId == request.auth.uid &&
+        validDailyClaimedList(request.resource.data.claimed) &&
+        request.resource.data.lastClaimedKey is string &&
+        request.resource.data.lastClaimedKey.size() == 10 &&
+        request.resource.data.cycleDay is int &&
+        request.resource.data.cycleDay >= 1 &&
+        request.resource.data.cycleDay <= 7 &&
+        request.resource.data.updatedAt == request.time;
+    }
+
+    function validStageProgress(userId) {
+      return request.resource.data.keys().hasOnly([
+          "chapter",
+          "currentStage",
+          "stars",
+          "updatedAt"
+        ]) &&
+        userId == request.auth.uid &&
+        request.resource.data.chapter is string &&
+        request.resource.data.chapter.size() <= 20 &&
+        request.resource.data.currentStage is int &&
+        request.resource.data.currentStage >= 1 &&
+        request.resource.data.currentStage <= 999 &&
+        validStageStars(request.resource.data.stars) &&
+        request.resource.data.updatedAt == request.time;
+    }
+
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if
+        request.auth != null &&
+        request.auth.uid == userId;
+
+      allow update: if
+        request.auth != null &&
+        request.auth.uid == userId;
+
+      allow delete: if false;
+    }
+
+    match /matches/{matchId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      allow create, update, delete: if false;
+    }
+
+    match /versusMatches/{matchId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+
+      allow create, update, delete: if false;
+    }
+
+    match /liveConfig/{docId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /pushCampaigns/{campaignId} {
+      allow read, write: if false;
+    }
+
+    match /seasonRewards/{rewardId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /dailyCheckins/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if false;
+      allow delete: if false;
+    }
+
+    match /dailyMissions/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /weeklyMissions/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /stageProgress/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if false;
+      allow delete: if false;
+    }
+
+    match /seasonPassClaims/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /iapTransactions/{transactionId} {
+      allow read, write: if false;
+    }
+
+    match /restoreCodes/{code} {
+      allow read, write: if false;
+    }
+
+    match /authRefreshTokens/{tokenId} {
+      allow read, write: if false;
+    }
+
+    match /friendCodes/{code} {
+      allow read, write: if false;
+    }
+
+    match /friendCodesByUid/{userId} {
+      allow read, write: if false;
+    }
+
+    match /friends/{userId}/items/{friendId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /friendRequests/{userId}/items/{requestId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /userContactHashes/{userId} {
+      allow read, write: if false;
+    }
+
+    match /userBlocks/{userId}/items/{blockedUserId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /reports/{reportId} {
+      allow read, write: if false;
+    }
+
+    match /moderationBans/{userId} {
+      allow read, write: if false;
+    }
+
+    match /userGuilds/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    match /guilds/{guildId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /guildMembers/{guildId}/items/{userId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    match /notificationPrefs/{userId} {
+      allow read, write: if false;
+    }
+
+    match /notificationTokens/{tokenId} {
+      allow read, write: if false;
+    }
+
+    match /adRewards/{rewardId} {
+      allow read, write: if false;
+    }
+
+    match /adRewardCounters/{counterId} {
+      allow read, write: if false;
+    }
+
+    match /rateLimits/{limitId} {
+      allow read, write: if false;
+    }
+
+    match /telemetryEvents/{eventId} {
+      allow read, write: if false;
+    }
+
+    match /scores/{scoreId} {
+      allow read: if true;
+      allow create: if validLeaderboardScore();
+      allow update: if
+        validLeaderboardScore() &&
+        resource.data.playerUid == request.auth.uid;
+      allow delete: if false;
+    }
+  }
+}

@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+functions/lib/
+.netlify/
+output/
+.playwright-cli/
+.wrangler/
+.firebase/
+*.zip
+design/
+애니팡디자인/
+*디자인/
+
+# Local environment values
+.env
+.env.*
+!.env.example
+
+# OS/editor noise
+.DS_Store
+*.log
