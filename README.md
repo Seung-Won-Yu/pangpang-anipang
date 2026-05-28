@@ -2,6 +2,8 @@
 
 A match-style web game prototype with a playful lobby, character assets, local play, and optional Firebase-backed ranking/account features.
 
+![PangPang Anipang lobby screenshot](docs/images/pangpang-anipang-home.png)
+
 ## Highlights
 
 - Match-style browser gameplay
